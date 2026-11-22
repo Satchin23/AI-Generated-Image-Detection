@@ -1,0 +1,40 @@
+{
+    "in_distribution_test": {
+        "accuracy": 0.875,
+        "precision": 0.8865979381443299,
+        "recall": 0.86,
+        "f1": 0.8730964467005076,
+        "confusion_matrix": [
+            [
+                178,
+                22
+            ],
+            [
+                28,
+                172
+            ]
+        ],
+        "total_samples": 400,
+        "roc_auc": 0.93505
+    },
+    "held_out_generator": {
+        "accuracy": 0.86,
+        "precision": 0.9235294117647059,
+        "recall": 0.785,
+        "f1": 0.8486486486486486,
+        "confusion_matrix": [
+            [
+                187,
+                13
+            ],
+            [
+                43,
+                157
+            ]
+        ],
+        "total_samples": 400,
+        "roc_auc": 0.9340999999999998
+    },
+    "calibrated_threshold": 0.5,
+    "best_val_f1": 0.8461538461538461
+}

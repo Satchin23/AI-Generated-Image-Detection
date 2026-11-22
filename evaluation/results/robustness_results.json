@@ -1,0 +1,92 @@
+{
+    "clean": {
+        "accuracy": 0.9025,
+        "precision": 0.9653179190751445,
+        "recall": 0.835,
+        "f1": 0.8954423592493298,
+        "confusion_matrix": [
+            [
+                194,
+                6
+            ],
+            [
+                33,
+                167
+            ]
+        ],
+        "total_samples": 400,
+        "predicted_ai_rate": 0.4325
+    },
+    "jpeg_q60": {
+        "accuracy": 0.9,
+        "precision": 0.9040404040404041,
+        "recall": 0.895,
+        "f1": 0.8994974874371859,
+        "confusion_matrix": [
+            [
+                181,
+                19
+            ],
+            [
+                21,
+                179
+            ]
+        ],
+        "total_samples": 400,
+        "predicted_ai_rate": 0.495
+    },
+    "gaussian_blur": {
+        "accuracy": 0.885,
+        "precision": 0.8928571428571429,
+        "recall": 0.875,
+        "f1": 0.8838383838383839,
+        "confusion_matrix": [
+            [
+                179,
+                21
+            ],
+            [
+                25,
+                175
+            ]
+        ],
+        "total_samples": 400,
+        "predicted_ai_rate": 0.49
+    },
+    "downsampling_0.5x": {
+        "accuracy": 0.89,
+        "precision": 0.9020618556701031,
+        "recall": 0.875,
+        "f1": 0.8883248730964467,
+        "confusion_matrix": [
+            [
+                181,
+                19
+            ],
+            [
+                25,
+                175
+            ]
+        ],
+        "total_samples": 400,
+        "predicted_ai_rate": 0.485
+    },
+    "contrast_1.4x": {
+        "accuracy": 0.87,
+        "precision": 0.9567901234567902,
+        "recall": 0.775,
+        "f1": 0.856353591160221,
+        "confusion_matrix": [
+            [
+                193,
+                7
+            ],
+            [
+                45,
+                155
+            ]
+        ],
+        "total_samples": 400,
+        "predicted_ai_rate": 0.405
+    }
+}
