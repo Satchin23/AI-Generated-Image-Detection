@@ -1,0 +1,29 @@
+2026-10-27 01:26:12,887 [INFO] ================================================================================
+2026-10-27 01:26:12,887 [INFO] STARTING CHAPTER 6 VERIFICATION TEST SUITE
+2026-10-27 01:26:12,887 [INFO] ================================================================================
+2026-10-27 01:26:12,895 [INFO] [PASS] TC-UNIT-01 - Image Loading & Preprocessing: Shape: (224, 224, 3), Min: 0.000, Max: 1.000
+2026-10-27 01:26:13,458 [INFO] [PASS] TC-UNIT-02 - Spatial Resizing & Tensor Normalization: Tensor shape: [3, 224, 224], Dtype: torch.float32, Mean: -0.512
+2026-10-27 01:26:14,450 [INFO] [PASS] TC-UNIT-03 - Spatial Feature Extraction & Prediction: Label: REAL, Confidence: 0.5013, Heatmap shape: (224, 224, 3), Overlay shape: (224, 224, 3)
+2026-10-27 01:26:14,455 [INFO] [PASS] TC-UNIT-04 - 2D FFT Frequency-Domain Extraction: Shape: (224, 224), Min: 0.0000, Max: 0.0000
+2026-10-27 01:26:16,201 [INFO] [PASS] TC-UNIT-05 - Dual-Branch Gated Fusion Prediction: Predicted Label: REAL, Confidence: 0.8254, Threshold: 0.55
+2026-10-27 01:26:17,079 [INFO] [PASS] TC-UNIT-06 - Grad-CAM Heatmap & Overlay Generation: Raw CAM: (7, 7), Overlay: (224, 224, 3), Colored CAM: (224, 224, 3), Max activation: 1.0000
+2026-10-27 01:26:20,069 [INFO] [PASS] TC-UNIT-07 - Output Invariants & Confidence Verification: Verified across multiple inputs: labels {'REAL', 'AI-GENERATED'} consistent, output dimensions invariant.
+2026-10-27 01:26:24,193 [INFO] [PASS] TC-FLOW-01 - End-to-End Inference Flow Path: All 6 stages executed successfully. Final Label: REAL, Confidence: 0.9998, Latency: 4123.4ms
+2026-10-27 01:26:24,221 [INFO] [PASS] TC-FREQ-01 - Multi-Band Spectral Extraction & CNN Embedding: Multi-band shape: (3, 224, 224), High-pass DC: 0.0, Embedding shape: [1, 256]
+2026-10-27 01:26:25,380 [INFO] [PASS] TC-EXPL-01 - Grad-CAM Hook Registration & ReLU Invariance: Gradients: [1, 2048, 7, 7], Activations: [1, 2048, 7, 7], Raw CAM: (7, 7), Min: 0.0000
+2026-10-27 01:26:25,899 [INFO] [PASS] TC-INT-01 - Application Pipeline & Session State Integration: Threshold: 0.55, Latency: 511.1ms, Output keys: ['id', 'timestamp', 'filename', 'label', 'confidence']
+2026-10-27 01:26:28,003 [INFO] [PASS] TC-BVA-01 - Extreme Low Resolution Image (16x16): Successfully processed 16x16 input. Label: REAL, Confidence: 0.8512, Overlay shape: (16, 16, 3), FFT shape: (224, 224)
+2026-10-27 01:26:30,839 [INFO] [PASS] TC-BVA-02 - Extreme High Resolution Image (1024x1024): Successfully processed 1024x1024 input. Label: REAL, Confidence: 0.8922, Overlay shape: (1024, 1024, 3)
+2026-10-27 01:26:33,810 [INFO] [PASS] TC-BVA-03 - Non-RGB Color Modes (RGBA, Grayscale, Palette): All modes processed successfully: RGBA -> REAL (0.85), L -> REAL (0.90), P -> REAL (0.80)
+2026-10-27 01:26:33,957 [INFO] [PASS] TC-BVA-04 - Corrupted / Non-Image File Handling: Corrupted file safely rejected: caught_gracefully = True
+2026-10-27 01:26:34,230 [INFO] [PASS] TC-BVA-05 - Missing Checkpoint Path Graceful Fallback: Gracefully caught missing checkpoint, architecture instantiated with random weights.
+2026-10-27 01:26:34,617 [INFO] [PASS] TC-BVA-06 - Invalid Input Tensor Dimensions (2D vs 4D): PyTorch dimension constraint properly triggered: caught_dim_err = True
+2026-10-27 01:26:36,589 [INFO] [PASS] TC-3CAT-01 - 1. Pristine Real Image (ImageNet-1k): Source: real_0000.JPEG, Actual Prediction: REAL, Confidence: 0.9998, Correct: True, Heatmap: (333, 500, 3), FFT: (224, 224)
+2026-10-27 01:26:37,062 [INFO] [PASS] TC-3CAT-02 - 2. In-Distribution AI Image (ADM Diffusion): Source: adm_0000.PNG, Actual Prediction: AI-GENERATED, Confidence: 0.8250, Correct: True, Heatmap: (256, 256, 3), FFT: (224, 224)
+2026-10-27 01:26:37,678 [INFO] [PASS] TC-3CAT-03 - 3. Out-of-Distribution Held-Out Generator (Midjourney): Source: midjourney_0000.png, Actual Prediction: AI-GENERATED, Confidence: 0.9988, Correct: True, Heatmap: (1024, 1024, 3), FFT: (224, 224)
+2026-10-27 01:26:37,678 [INFO] ================================================================================
+2026-10-27 01:26:37,678 [INFO] ALL CHAPTER 6 TESTS COMPLETED
+2026-10-27 01:26:37,679 [INFO] Total Tests Executed: 20
+2026-10-27 01:26:37,679 [INFO] Summary: PASS=20, FAIL=0, BLOCKED=0, NOT RUN=0
+2026-10-27 01:26:37,679 [INFO] ================================================================================
+2026-10-27 01:26:37,683 [INFO] Detailed JSON results saved to: D:\Mini_Project\record_evidence\test_results.json

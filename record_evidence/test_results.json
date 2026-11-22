@@ -1,0 +1,306 @@
+{
+    "timestamp": "2026-10-27 01:26:37",
+    "summary": {
+        "total": 20,
+        "passed": 20,
+        "failed": 0,
+        "blocked": 0,
+        "not_run": 0
+    },
+    "tests": [
+        {
+            "test_id": "TC-UNIT-01",
+            "category": "6.1 Unit Testing",
+            "title": "Image Loading & Preprocessing",
+            "description": "Validates dummy preprocessing, shape alteration to (224, 224, 3), and [0.0, 1.0] range scaling.",
+            "procedure": "preprocess_image_dummy(raw_img)",
+            "expected": "Numpy array shape (224, 224, 3) with normalized values in [0.0, 1.0].",
+            "observed": "Shape: (224, 224, 3), Min: 0.000, Max: 1.000",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-UNIT-02",
+            "category": "6.1 Unit Testing",
+            "title": "Spatial Resizing & Tensor Normalization",
+            "description": "Verifies ImageNet standard 3-channel normalization and tensor reshaping to [3, 224, 224].",
+            "procedure": "SpatialPredictor().transform(raw_img)",
+            "expected": "PyTorch tensor with shape [3, 224, 224] and float32 dtype.",
+            "observed": "Tensor shape: [3, 224, 224], Dtype: torch.float32, Mean: -0.512",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-UNIT-03",
+            "category": "6.1 Unit Testing",
+            "title": "Spatial Feature Extraction & Prediction",
+            "description": "Tests ResNet-50 feature extraction, classification logits, and output bounds.",
+            "procedure": "SpatialPredictor().predict(test_img)",
+            "expected": "Predicted label in {'REAL', 'AI-GENERATED'}, confidence in [0.0, 1.0], heatmap shape (224, 224, 3).",
+            "observed": "Label: REAL, Confidence: 0.5013, Heatmap shape: (224, 224, 3), Overlay shape: (224, 224, 3)",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-UNIT-04",
+            "category": "6.1 Unit Testing",
+            "title": "2D FFT Frequency-Domain Extraction",
+            "description": "Computes centered 2D Fast Fourier Transform log-magnitude spectrum with percentile clipping.",
+            "procedure": "compute_fft_spectrum(raw_img, size=(224, 224))",
+            "expected": "Normalized 2D spectrum of shape (224, 224) with values in range [0.0, 1.0].",
+            "observed": "Shape: (224, 224), Min: 0.0000, Max: 0.0000",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-UNIT-05",
+            "category": "6.1 Unit Testing",
+            "title": "Dual-Branch Gated Fusion Prediction",
+            "description": "Evaluates combined spatial ResNet-50 and frequency ConvNet with sigmoid gating.",
+            "procedure": "DualBranchPredictor().predict(test_img)",
+            "expected": "Class label in {'REAL', 'AI-GENERATED'}, confidence in [0.0, 1.0], calibrated threshold tau=0.55 applied.",
+            "observed": "Predicted Label: REAL, Confidence: 0.8254, Threshold: 0.55",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-UNIT-06",
+            "category": "6.1 Unit Testing",
+            "title": "Grad-CAM Heatmap & Overlay Generation",
+            "description": "Registers forward and backward hooks at ResNet-50 layer4[-1], computes 7x7 gradient weights, and overlays colormap at original image resolution.",
+            "procedure": "gradcam.generate(tensor) -> gradcam.overlay(pil_ref, raw_cam)",
+            "expected": "Raw 7x7 activation map normalized in [0.0, 1.0] and resized RGB overlay array of shape (224, 224, 3).",
+            "observed": "Raw CAM: (7, 7), Overlay: (224, 224, 3), Colored CAM: (224, 224, 3), Max activation: 1.0000",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-UNIT-07",
+            "category": "6.1 Unit Testing",
+            "title": "Output Invariants & Confidence Verification",
+            "description": "Verifies that across varied input pixel distributions, labels, confidence scores, and visualization shapes remain strictly invariant.",
+            "procedure": "Iterative prediction across extreme uniform pixel arrays.",
+            "expected": "All predictions return strictly valid binary labels, normalized confidences, and correct visual tensor shapes.",
+            "observed": "Verified across multiple inputs: labels {'REAL', 'AI-GENERATED'} consistent, output dimensions invariant.",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-FLOW-01",
+            "category": "6.1.1 Flow Path Testing",
+            "title": "End-to-End Inference Flow Path",
+            "description": "Traces a real image through input -> preprocessing -> dual-branch processing -> gated fusion -> Grad-CAM explainability -> final structured UI output.",
+            "procedure": "Sequential step-by-step execution tracking intermediate tensors, gate alpha values, and visualization shapes.",
+            "expected": "All 6 pipeline stages execute without exceptions; latency under 5000ms on CPU.",
+            "observed": "All 6 stages executed successfully. Final Label: REAL, Confidence: 0.9998, Latency: 4123.4ms",
+            "status": "PASS",
+            "details": {
+                "step1_image_input": "OK (500x333)",
+                "step2_preprocessing": "OK (RGB convert)",
+                "step3_spatio_frequency_processing": "OK (spatial: [1,3,224,224], fft: [1,3,224,224])",
+                "step4_fusion_classification": "OK (Label: REAL, Conf: 0.9998, Gate Alpha: 0.715)",
+                "step5_gradcam_visualization": "OK (Heatmap: (333, 500, 3), Overlay: (333, 500, 3))",
+                "step6_pipeline_result": "OK (Pipeline ID: b8ff078b)",
+                "latency_ms": "4123.4ms"
+            }
+        },
+        {
+            "test_id": "TC-FREQ-01",
+            "category": "6.1.2 Frequency Testing",
+            "title": "Multi-Band Spectral Extraction & CNN Embedding",
+            "description": "Tests 3-channel 2D FFT extraction (Full, High-Pass, Band-Pass), DC masking, tensor replication, and 256-d embedding.",
+            "procedure": "compute_multi_band_fft() -> fft_spectrum_to_tensor() -> FrequencyBranch.forward()",
+            "expected": "3-channel spectral array [3, 224, 224] with center DC masked to 0.0 on high-pass, projecting to 256-d embedding.",
+            "observed": "Multi-band shape: (3, 224, 224), High-pass DC: 0.0, Embedding shape: [1, 256]",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-EXPL-01",
+            "category": "6.1.3 Explainability Testing",
+            "title": "Grad-CAM Hook Registration & ReLU Invariance",
+            "description": "Validates forward/backward PyTorch hook attachments, gradient pooling, positive ReLU rectification, and hook disposal.",
+            "procedure": "GradCAM.generate() with target_class=1, inspect gradcam.gradients and activations.",
+            "expected": "Gradients and activations non-null, 7x7 activation map non-negative, hook removal cleanly executed.",
+            "observed": "Gradients: [1, 2048, 7, 7], Activations: [1, 2048, 7, 7], Raw CAM: (7, 7), Min: 0.0000",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-INT-01",
+            "category": "6.2 Integrated Testing",
+            "title": "Application Pipeline & Session State Integration",
+            "description": "Validates cached model loading, threshold retrieval, single-image analysis payload, and metadata packaging.",
+            "procedure": "ui.pipeline.init_session_state() -> ui.pipeline.analyze_single_image()",
+            "expected": "Session state properly populated, threshold=0.55 loaded, analysis dictionary contains all rendering keys.",
+            "observed": "Threshold: 0.55, Latency: 511.1ms, Output keys: ['id', 'timestamp', 'filename', 'label', 'confidence']",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-BVA-01",
+            "category": "6.2.1 Boundary Value Analysis",
+            "title": "Extreme Low Resolution Image (16x16)",
+            "description": "Tests preprocessing and prediction pipeline on miniature 16x16 valid RGB image.",
+            "procedure": "DualBranchPredictor().predict(Image.new('RGB', (16, 16)))",
+            "expected": "Automatic bilinear upsampling to 224x224 for backbone inference, visualization returned at original 16x16 resolution.",
+            "observed": "Successfully processed 16x16 input. Label: REAL, Confidence: 0.8512, Overlay shape: (16, 16, 3), FFT shape: (224, 224)",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-BVA-02",
+            "category": "6.2.1 Boundary Value Analysis",
+            "title": "Extreme High Resolution Image (1024x1024)",
+            "description": "Tests memory allocation and pipeline stability on high-resolution 1024x1024 input.",
+            "procedure": "DualBranchPredictor().predict(Image.new('RGB', (1024, 1024)))",
+            "expected": "Downsampled to 224x224 for inference, full-resolution 1024x1024 overlay generated without memory crash.",
+            "observed": "Successfully processed 1024x1024 input. Label: REAL, Confidence: 0.8922, Overlay shape: (1024, 1024, 3)",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-BVA-03",
+            "category": "6.2.1 Boundary Value Analysis",
+            "title": "Non-RGB Color Modes (RGBA, Grayscale, Palette)",
+            "description": "Evaluates multi-modal input channels by passing RGBA (4-ch), Grayscale L (1-ch), and Palette P (indexed).",
+            "procedure": "Image.convert('RGB') -> DualBranchPredictor().predict()",
+            "expected": "Pipeline safely converts non-RGB formats to 3-channel RGB without dropping color channels or failing.",
+            "observed": "All modes processed successfully: RGBA -> REAL (0.85), L -> REAL (0.90), P -> REAL (0.80)",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-BVA-04",
+            "category": "6.2.1 Boundary Value Analysis",
+            "title": "Corrupted / Non-Image File Handling",
+            "description": "Attempts to decode arbitrary text stream as an image to evaluate error trapping.",
+            "procedure": "Image.open(corrupted_bytes).verify()",
+            "expected": "PIL UnidentifiedImageError or OSError caught safely, preventing application crash.",
+            "observed": "Corrupted file safely rejected: caught_gracefully = True",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-BVA-05",
+            "category": "6.2.1 Boundary Value Analysis",
+            "title": "Missing Checkpoint Path Graceful Fallback",
+            "description": "Initializes predictor with a non-existent checkpoint path.",
+            "procedure": "SpatialPredictor(checkpoint_path='non_existent.pth')",
+            "expected": "Logs warning, instantiates uninitialized architecture without raising uncaught fatal exception.",
+            "observed": "Gracefully caught missing checkpoint, architecture instantiated with random weights.",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-BVA-06",
+            "category": "6.2.1 Boundary Value Analysis",
+            "title": "Invalid Input Tensor Dimensions (2D vs 4D)",
+            "description": "Supplies improper 2D rank tensor to convolutional spatial branch.",
+            "procedure": "SpatialBranch().forward(torch.randn(224, 224))",
+            "expected": "PyTorch raises RuntimeError/ValueError; exception properly classified.",
+            "observed": "PyTorch dimension constraint properly triggered: caught_dim_err = True",
+            "status": "PASS",
+            "details": {}
+        },
+        {
+            "test_id": "TC-3CAT-01",
+            "category": "6.2.2 Output Validation (3 Categories)",
+            "title": "1. Pristine Real Image (ImageNet-1k)",
+            "description": "Evaluates dual-branch fusion prediction and visualizations for 1. Pristine Real Image (ImageNet-1k) from disk.",
+            "procedure": "DualBranchPredictor().predict('D:\\Mini_Project\\data\\raw\\REAL\\imagenet\\real_0000.JPEG')",
+            "expected": "Model produces valid predicted label ('REAL' or 'AI-GENERATED'), confidence in [0, 1], and corresponding visual maps.",
+            "observed": "Source: real_0000.JPEG, Actual Prediction: REAL, Confidence: 0.9998, Correct: True, Heatmap: (333, 500, 3), FFT: (224, 224)",
+            "status": "PASS",
+            "details": {
+                "input_source": "D:\\Mini_Project\\data\\raw\\REAL\\imagenet\\real_0000.JPEG",
+                "ground_truth": "REAL",
+                "predicted_label": "REAL",
+                "confidence_score": 0.9997923560003983,
+                "is_correct_prediction": true,
+                "calibrated_threshold": 0.55,
+                "heatmap_shape": [
+                    333,
+                    500,
+                    3
+                ],
+                "overlay_shape": [
+                    333,
+                    500,
+                    3
+                ],
+                "fft_shape": [
+                    224,
+                    224
+                ],
+                "latency_ms": 592.125654220581
+            }
+        },
+        {
+            "test_id": "TC-3CAT-02",
+            "category": "6.2.2 Output Validation (3 Categories)",
+            "title": "2. In-Distribution AI Image (ADM Diffusion)",
+            "description": "Evaluates dual-branch fusion prediction and visualizations for 2. In-Distribution AI Image (ADM Diffusion) from disk.",
+            "procedure": "DualBranchPredictor().predict('D:\\Mini_Project\\data\\raw\\AI-GENERATED\\adm\\adm_0000.PNG')",
+            "expected": "Model produces valid predicted label ('REAL' or 'AI-GENERATED'), confidence in [0, 1], and corresponding visual maps.",
+            "observed": "Source: adm_0000.PNG, Actual Prediction: AI-GENERATED, Confidence: 0.8250, Correct: True, Heatmap: (256, 256, 3), FFT: (224, 224)",
+            "status": "PASS",
+            "details": {
+                "input_source": "D:\\Mini_Project\\data\\raw\\AI-GENERATED\\adm\\adm_0000.PNG",
+                "ground_truth": "AI-GENERATED",
+                "predicted_label": "AI-GENERATED",
+                "confidence_score": 0.8249858021736145,
+                "is_correct_prediction": true,
+                "calibrated_threshold": 0.55,
+                "heatmap_shape": [
+                    256,
+                    256,
+                    3
+                ],
+                "overlay_shape": [
+                    256,
+                    256,
+                    3
+                ],
+                "fft_shape": [
+                    224,
+                    224
+                ],
+                "latency_ms": 466.63355827331543
+            }
+        },
+        {
+            "test_id": "TC-3CAT-03",
+            "category": "6.2.2 Output Validation (3 Categories)",
+            "title": "3. Out-of-Distribution Held-Out Generator (Midjourney)",
+            "description": "Evaluates dual-branch fusion prediction and visualizations for 3. Out-of-Distribution Held-Out Generator (Midjourney) from disk.",
+            "procedure": "DualBranchPredictor().predict('D:\\Mini_Project\\data\\raw\\AI-GENERATED\\midjourney\\midjourney_0000.png')",
+            "expected": "Model produces valid predicted label ('REAL' or 'AI-GENERATED'), confidence in [0, 1], and corresponding visual maps.",
+            "observed": "Source: midjourney_0000.png, Actual Prediction: AI-GENERATED, Confidence: 0.9988, Correct: True, Heatmap: (1024, 1024, 3), FFT: (224, 224)",
+            "status": "PASS",
+            "details": {
+                "input_source": "D:\\Mini_Project\\data\\raw\\AI-GENERATED\\midjourney\\midjourney_0000.png",
+                "ground_truth": "AI-GENERATED",
+                "predicted_label": "AI-GENERATED",
+                "confidence_score": 0.9988215565681458,
+                "is_correct_prediction": true,
+                "calibrated_threshold": 0.55,
+                "heatmap_shape": [
+                    1024,
+                    1024,
+                    3
+                ],
+                "overlay_shape": [
+                    1024,
+                    1024,
+                    3
+                ],
+                "fft_shape": [
+                    224,
+                    224
+                ],
+                "latency_ms": 582.8812122344971
+            }
+        }
+    ]
+}
